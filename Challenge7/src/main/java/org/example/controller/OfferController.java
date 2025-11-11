@@ -6,6 +6,8 @@ import org.example.Offer;
 import org.example.Item;
 
 import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.HashMap;
@@ -59,31 +61,56 @@ public class OfferController {
             return new ModelAndView(model, "offer_form.mustache");
         }, new MustacheTemplateEngine());
 
-        post("/offers", (req, res) -> {
+        post("/offers", this::handlePostOffer);
+    }
+
+    public String handlePostOffer(Request req, Response res) {
+        try {
+            String itemId = req.queryParams("itemId");
+            String offerPriceStr = req.queryParams("offerPrice");
+            String offerUser = req.queryParams("offerUser");
+
+            // Validaciones básicas
+            if (itemId == null || offerPriceStr == null || offerUser == null) {
+                res.status(400);
+                return gson.toJson("Missing required parameters");
+            }
+
+            double offerPrice;
             try {
-                String itemId = req.queryParams("itemId");
-                double offerPrice = Double.parseDouble(req.queryParams("offerPrice"));
-                String offerUser = req.queryParams("offerUser");
-
-                Offer offer = new Offer(0, itemId, offerPrice, offerUser);
-                boolean added = offerDAO.addOffer(offer);
-
-                if (added) {
-                    Item item = itemDAO.getItemById(itemId);
-                    if (item != null) {
-                        item.setPrice(offerPrice);
-                        itemDAO.updateItem(itemId, item);
-                        PriceWebSocket.broadcastPriceUpdate(item);
-                    }
-                }
-
-                res.redirect("/offers");
-                return null;
+                offerPrice = Double.parseDouble(offerPriceStr);
             } catch (NumberFormatException e) {
                 res.status(400);
-                return "Precio inválido";
+                return gson.toJson("Invalid price format");
             }
-        });
 
+            Item item = itemDAO.getItemById(itemId);
+            if (item == null) {
+                res.status(404);
+                return gson.toJson("Item not found");
+            }
+
+            Offer offer = new Offer(itemId, offerUser, offerPrice);
+            boolean offerCreated = offerDAO.addOffer(offer);
+
+            if (!offerCreated) {
+                res.status(500);
+                return gson.toJson("Failed to create offer");
+            }
+
+            // ✅ Actualizar el precio del item si es necesario
+            item.setPrice(offerPrice);
+            itemDAO.updateItem(itemId, item);
+
+            res.status(201);
+            // ✅ Redirigir al listado de items
+            res.redirect("/items", 303);
+            return gson.toJson("Offer created successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.status(500);
+            return gson.toJson("Error processing offer");
+        }
     }
 }

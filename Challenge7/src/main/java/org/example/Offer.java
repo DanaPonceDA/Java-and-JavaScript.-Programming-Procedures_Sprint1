@@ -14,6 +14,11 @@ public class Offer {
         this.offerPrice = offerPrice;
         this.offerUser = offerUser;
     }
+    public Offer(String itemId, String offerUser, double offerPrice) {
+        this.itemId = itemId;
+        this.offerUser = offerUser;
+        this.offerPrice = offerPrice;
+    }
 
     public int getId() {
         return id;

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
