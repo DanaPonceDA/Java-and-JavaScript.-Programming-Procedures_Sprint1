@@ -9,14 +9,11 @@ import java.util.List;
 
 public class ItemDAO {
 
-    // MÉTODO DE UTILIDAD: Decide si usar la conexión de prueba o la de producción
     private Connection getCurrentConnection() throws SQLException {
-        // 1. Intentar usar la conexión de prueba (si fue inyectada por DatabaseTestHelper)
         Connection testConn = DatabaseTestHelper.getConnection();
         if (testConn != null) {
             return testConn;
         }
-        // 2. Si no hay conexión de prueba, usar la conexión de producción/default
         return Database.getConnection();
     }
 
@@ -25,10 +22,8 @@ public class ItemDAO {
         String sql = "SELECT id, nombre, descripcion, price FROM items";
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
-            // Usar try-with-resources solo para Statement y ResultSet
             try (Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -52,14 +47,12 @@ public class ItemDAO {
         String sql = "SELECT id, nombre, descripcion, price FROM items WHERE id = ?";
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, id);
 
-                // Usar try-with-resources para el ResultSet
                 try(ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
                         return new Item(
@@ -85,7 +78,6 @@ public class ItemDAO {
         if (maxPrice != null) sql.append(" AND price <= ?");
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
@@ -94,7 +86,6 @@ public class ItemDAO {
                 if (minPrice != null) pstmt.setDouble(index++, minPrice);
                 if (maxPrice != null) pstmt.setDouble(index++, maxPrice);
 
-                // Usar try-with-resources para el ResultSet
                 try(ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
                         items.add(new Item(
@@ -116,7 +107,6 @@ public class ItemDAO {
         String sql = "INSERT INTO items (id, nombre, descripcion, price) VALUES (?, ?, ?, ?)";
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -140,7 +130,6 @@ public class ItemDAO {
         String sql = "UPDATE items SET nombre = ?, descripcion = ?, price = ? WHERE id = ?";
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -164,7 +153,6 @@ public class ItemDAO {
         String sql = "DELETE FROM items WHERE id = ?";
 
         try {
-            // CAMBIO CLAVE: Obtener la conexión fuera del try-with-resources
             Connection conn = getCurrentConnection();
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
