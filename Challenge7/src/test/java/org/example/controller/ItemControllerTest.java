@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import spark.Request;
 import spark.Response;
 
-import java.lang.reflect.Method; // Importar Method
+import java.lang.reflect.Method; 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,7 +27,7 @@ class ItemControllerTest {
         itemDAO = mock(ItemDAO.class);
         gson = new Gson();
         controller = new ItemController(itemDAO, gson);
-        req = mock(Request.class);  // 🟢 Simulamos las peticiones HTTP de Spark
+        req = mock(Request.class);  
         res = mock(Response.class);
     }
 
@@ -40,7 +40,7 @@ class ItemControllerTest {
 
         String result = controller.handleAddItem(req, res);
 
-        assertNull(result); // porque redirige y retorna null
+        assertNull(result);
         verify(itemDAO, times(1)).addItem(any(Item.class));
     }
 
