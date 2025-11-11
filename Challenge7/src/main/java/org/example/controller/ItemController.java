@@ -67,7 +67,6 @@ public class ItemController {
             return new ModelAndView(model, "item_detail.mustache");
         }, new MustacheTemplateEngine());
 
-        // ✅ Cambiamos de this::addItem a this::handleAddItem (nuevo método público para testing)
         post("/items", this::handleAddItem);
 
         put("/items/:id", this::updateItem);
@@ -75,13 +74,10 @@ public class ItemController {
         delete("/items/:id", this::deleteItem);
     }
 
-    // ✅ Nuevo método público para las pruebas unitarias
-    // Replica la lógica de addItem() pero con un nombre accesible
     public String handleAddItem(Request req, Response res) {
         try {
             res.type("application/json");
 
-            // 🔹 Leer los valores del formulario (NO JSON)
             String nombre = req.queryParams("nombre");
             String descripcion = req.queryParams("descripcion");
             String priceStr = req.queryParams("price");
@@ -93,18 +89,15 @@ public class ItemController {
 
             double price = Double.parseDouble(priceStr);
 
-            // 🔹 Crear el objeto Item
             Item item = new Item();
             item.setNombre(nombre);
             item.setDescripcion(descripcion);
             item.setPrice(price);
 
-            // 🔹 Insertar en la base de datos
             boolean created = itemDAO.addItem(item);
 
             res.status(created ? 201 : 400);
             if (created) {
-                // ✅ Si el item se creó correctamente, redirige al listado de ítems
                 res.redirect("/items");
                 return null; // Spark ignora el return si ya se hizo redirect
             } else {
@@ -121,7 +114,6 @@ public class ItemController {
         }
     }
 
-    // 🔒 Dejamos addItem() privado para uso interno, no se usa en tests
     private Object addItem(Request req, Response res) throws Exception {
         res.type("application/json");
         String id = req.params("id");
@@ -130,9 +122,8 @@ public class ItemController {
         boolean created = itemDAO.addItem(item);
         res.status(created ? 201 : 400);
         if (created) {
-            // ✅ Si el item se creó correctamente, redirige al listado de ítems
             res.redirect("/items");
-            return null; // Spark ignora el return si ya se hizo redirect
+            return null; 
         } else {
             res.status(400);
             return gson.toJson("Failed to create item");
