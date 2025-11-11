@@ -12,26 +12,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ItemDAOTest {
 
-    private Connection connection; // CAMBIO: Ahora es una conexión de instancia
+    private Connection connection; 
     private ItemDAO itemDAO;
 
-    @BeforeEach // CAMBIO CLAVE: Usamos BeforeEach para una DB limpia por test
+    @BeforeEach 
     void setupDatabase() throws Exception {
-        // 1. Abrir una nueva conexión H2 para esta prueba
         connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
 
-        // 2. Crear la tabla
         Statement stmt = connection.createStatement();
         stmt.execute("DROP TABLE IF EXISTS items");
         stmt.execute("CREATE TABLE items (id VARCHAR(255) PRIMARY KEY, nombre VARCHAR(255), descripcion TEXT, price DOUBLE)");
         stmt.close();
 
-        // 3. Establecer la conexión en el Helper
         DatabaseTestHelper.setConnection(connection);
         itemDAO = new ItemDAO();
     }
 
-    @AfterEach // CAMBIO CLAVE: Usamos AfterEach para cerrar la conexión de esta prueba
+    @AfterEach 
     void tearDown() throws Exception {
         if (connection != null && !connection.isClosed()) {
             connection.close();
