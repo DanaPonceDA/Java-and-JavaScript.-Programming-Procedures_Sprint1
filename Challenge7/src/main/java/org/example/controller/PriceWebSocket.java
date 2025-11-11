@@ -17,7 +17,7 @@ import java.util.Set;
 @WebSocket
 public class PriceWebSocket {
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
-    private static ItemDAO itemDAO;                     // set desde Main
+    private static ItemDAO itemDAO;                     
     private static final Gson gson = new Gson();
 
     public static void setItemDAO(ItemDAO dao) {
