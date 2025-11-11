@@ -70,7 +70,6 @@ public class OfferController {
             String offerPriceStr = req.queryParams("offerPrice");
             String offerUser = req.queryParams("offerUser");
 
-            // Validaciones básicas
             if (itemId == null || offerPriceStr == null || offerUser == null) {
                 res.status(400);
                 return gson.toJson("Missing required parameters");
@@ -98,12 +97,10 @@ public class OfferController {
                 return gson.toJson("Failed to create offer");
             }
 
-            // ✅ Actualizar el precio del item si es necesario
             item.setPrice(offerPrice);
             itemDAO.updateItem(itemId, item);
 
             res.status(201);
-            // ✅ Redirigir al listado de items
             res.redirect("/items", 303);
             return gson.toJson("Offer created successfully");
 
