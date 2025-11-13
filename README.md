@@ -44,9 +44,29 @@ Frontend                |        User interface for interacting with the system.
 ---
 
 ##  Project Structure
+<img width="415" height="742" alt="1" src="https://github.com/user-attachments/assets/d193de7c-118d-46bf-9730-061ece48a11f" />
+<img width="417" height="663" alt="2" src="https://github.com/user-attachments/assets/942b12a2-53b4-4dda-9bbf-90fc9891d066" />
+<img width="421" height="487" alt="3" src="https://github.com/user-attachments/assets/60c1e37a-9ee0-4a9b-b867-fa49512cfe9d" />
 
-<img width="296" height="475" alt="image" src="https://github.com/user-attachments/assets/971e80c5-95bd-472c-a79d-4d6ea4123035" />
 ##  Testing Environment
+ItemControllerTest
+<img width="1197" height="803" alt="ItemControllerTest" src="https://github.com/user-attachments/assets/65fa79c0-ad9b-4259-9f5a-3d05836b9056" />
+
+OfferControllerTest
+<img width="1338" height="383" alt="OfferControllerTest" src="https://github.com/user-attachments/assets/a2b3b214-5231-41d1-8b41-3623b1641edc" />
+
+The two test are executed in the same way: In the structure of the project (Using IntelliJ) select with rightclick over the class and select the option "Run'ItemControllerTest'" or "'OfferControllerTest'" Then we can see how many test  were passed. 
+
+Other way is to open the root of the project in cmd, using the command "mvn test"
+<img width="1918" height="431" alt="Tests" src="https://github.com/user-attachments/assets/07ba5bc4-04d9-4e48-93e6-4f2a6afb8af6" />
+
+To see the report in JaCoco, it's in the directory "Challenge7\target\site\jacoco" the index.html file. 
+
+JaCoco
+<img width="1918" height="320" alt="Jacoco" src="https://github.com/user-attachments/assets/ec9fdd19-2bec-4bf5-a32b-4f74b5b49896" />
+
+The command "npm run coverage" can also be used
+
 
 
 ###  Dependencies
@@ -208,18 +228,20 @@ Results Overview:
 <img width="946" height="237" alt="image" src="https://github.com/user-attachments/assets/81aed30f-896c-4588-ac6e-a3e5de07eb32" />
 
 Code Coverage by Package
-Package	                  |Coverage    |	Status
-org.example.model	        |100%        |	✅
-org.example.dao	          |94%	       |✅
-org.example.controller	  | 91%	        |✅
-Total Average	            |92.4%	      |✅
+## Package	                      |Coverage    |	Status
+org.example.model	              |100%        |	Complete
+org.example.dao	                  |94%	       |    Almost complete
+org.example.controller	          | 91%	       |    Almost complete
+Total Average	                  |92.4%	   |    Almost complete
 
 
- Issues Detected & Fixes Applied
+## Issues Detected & Fixes Applied
 Issue	Description	Fix
 Route mismatch in UserController.addUser()	Required /users/:id instead of POST /users	Adjusted to accept POST /users with ID from body
 NullPointerException in PriceWebSocket	DAO not initialized before broadcast	Initialized DAO in Main.java before WebSocket start
 DAO test pollution	Tables retained previous data	Added @BeforeEach cleanup in DAO tests
+
+In the momento of the final review, some testing were incorrect. Also, a lot of rows in the code wasn't read it, so the test can't be done
 
 
 Final Evaluation
